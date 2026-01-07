@@ -1,25 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from models.minimaxai import generate  # wrapper Minimax
+from models.minimaxai import generate
 
-app = FastAPI(title="LLM Test Service")
+app = FastAPI(title="MiniMax API Wrapper")
 
-# ===== Schema =====
-class QuestionRequest(BaseModel):
+class AskRequest(BaseModel):
     question: str
 
-class AnswerResponse(BaseModel):
-    answer: str
-    model: str
-
-# ===== API =====
-@app.post("/askminimax", response_model=AnswerResponse)
-def ask_minimax(req: QuestionRequest):
-    """
-    API test Minimax LLM.
-    """
-    output = generate(req.question)
+@app.post("/askminimax")
+def ask_minimax(req: AskRequest):
+    answer = generate(req.question)
     return {
-        "answer": output,
-        "model": "minimax"
+        "model": "MiniMax-M2.1",
+        "answer": answer
     }
